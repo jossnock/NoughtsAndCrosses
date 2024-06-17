@@ -1,5 +1,4 @@
-﻿// See https://aka.ms/new-console-template for more information
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 // defining methods:
 
@@ -58,42 +57,57 @@ static void NCPrint(char[,] inputBoard)
 
 // Playing the game:
 
-char[,] board = { { ' ', ' ', ' ' }, 
-                  { ' ', ' ', ' ' }, 
-                  { ' ', ' ', ' ' } };
-
-int currentPlayer = 0; // 0 = player 1 because it makes converting from player number to X or O and switching between p1 and p2 easier
-char[] PLAYERS = { 'X', 'O' };
-
-
-while (CheckForWin(board) == ' ')
+static void PlayNC()
 {
+    char[,] board = { { ' ', ' ', ' ' }, 
+                    { ' ', ' ', ' ' }, 
+                    { ' ', ' ', ' ' } };
+    int currentPlayer = 0; // 0 = player 1 because it makes converting from player number to X or O and switching between p1 and p2 easier
+    char[] PLAYERS = { 'X', 'O' };
+
+    while (CheckForWin(board) == ' ')
+    {
+        NCPrint(board);
+        Console.WriteLine($"- - - Player {currentPlayer + 1}'s turn - - -");
+
+        Console.WriteLine($"Player {currentPlayer + 1}, choose a row (0-2): "); // since currentPlayer is either 0 or 1, 1 must be added
+        int row = Convert.ToInt32(Console.ReadLine());
+
+        Console.WriteLine($"Player {currentPlayer + 1}, choose a column (0-2): "); // since currentPlayer is either 0 or 1, 1 must be added
+        int column = Convert.ToInt32(Console.ReadLine());
+
+        Console.WriteLine("- - - - - - - - - - - - - -"); // buffer between rounds
+
+        if (((row < 0) | (row > 2)) | ((column < 0) | (column > 2))) // confirming the space is within the board
+        {
+            Console.WriteLine("That space isn't on the board, choose a space within rows 0-2 and columns 0-2");
+            continue; // skips the switch between players and the board update
+        }
+
+        if (board[row, column] != ' ') // confirming the space is empty
+        {
+            Console.WriteLine("That space is already filled, choose an empty space");
+            continue; // skips the switch between players and the board update
+        }
+        
+        board[row, column] = PLAYERS[currentPlayer]; // updating board with X or O in selected space (depending on the player)
+
+        // Switching currentPlayer between 0 and 1:
+        currentPlayer++;
+        currentPlayer %= 2;
+    }
+
     NCPrint(board);
-    Console.WriteLine($"- - - Player {currentPlayer + 1}'s turn - - -");
 
-    Console.WriteLine($"Player {currentPlayer + 1}, choose a row (0, 1, or 2): "); // since currentPlayer is either 0 or 1, 1 must be added
-    int row = Convert.ToInt32(Console.ReadLine());
+    char winner = CheckForWin(board);
 
-    Console.WriteLine($"Player {currentPlayer + 1}, choose a column (0, 1, or 2): "); // since currentPlayer is either 0 or 1, 1 must be added
-    int column = Convert.ToInt32(Console.ReadLine());
-
-    Console.WriteLine("- - - - - - - - - - - - - -"); // buffer between rounds
-
-    board[row, column] = PLAYERS[currentPlayer]; // updating board
-
-    // Switching currentPlayer between 0 and 1:
-    currentPlayer++;
-    currentPlayer %= 2;
+    if (winner == 'X') Console.WriteLine("Player 1 wins!");
+    else if (winner == 'O') Console.WriteLine("Player 2 wins!");
+    else Console.WriteLine("Draw!");
 }
 
-NCPrint(board);
 
-char winner = CheckForWin(board);
-
-if (winner == 'X') Console.WriteLine("Player 1 wins!");
-else if (winner == 'O') Console.WriteLine("Player 2 wins!");
-else Console.WriteLine("Draw!");
-
+PlayNC();
 
 
 // Asserts:
