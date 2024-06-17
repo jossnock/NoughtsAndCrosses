@@ -11,7 +11,7 @@ char[,] board = { {'O', 'X', ' '},
 // defining methods:
 
 static void NCPrint(char[,] inputBoard)
-    // Prints the current state of the board
+    // Prints the current state of the board:
     {
         for (int row = 0; row < 3; row++)
         {
