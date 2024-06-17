@@ -59,32 +59,61 @@ static void NCPrint(char[,] inputBoard)
 
 static void PlayNC()
 {
-    char[,] board = { { ' ', ' ', ' ' }, 
-                    { ' ', ' ', ' ' }, 
-                    { ' ', ' ', ' ' } };
+    char[,] board = { { '1', '2', '3' }, 
+                      { '4', '5', '6' }, 
+                      { '7', '8', '9' } };
     int currentPlayer = 0; // 0 = player 1 because it makes converting from player number to X or O and switching between p1 and p2 easier
     char[] PLAYERS = { 'X', 'O' };
+    int turnNum = 1;
 
     while (CheckForWin(board) == ' ')
     {
         NCPrint(board);
         Console.WriteLine($"- - - Player {currentPlayer + 1}'s turn - - -");
 
-        Console.WriteLine($"Player {currentPlayer + 1}, choose a row (0-2): "); // since currentPlayer is either 0 or 1, 1 must be added
-        int row = Convert.ToInt32(Console.ReadLine());
-
-        Console.WriteLine($"Player {currentPlayer + 1}, choose a column (0-2): "); // since currentPlayer is either 0 or 1, 1 must be added
-        int column = Convert.ToInt32(Console.ReadLine());
+        Console.WriteLine($"Player {currentPlayer + 1}, choose a space (1-9): "); // since currentPlayer is either 0 or 1, 1 must be added
+        char space = Console.ReadLine()[0]; // convert input string of 1 letter to char
 
         Console.WriteLine("- - - - - - - - - - - - - -"); // buffer between rounds
 
-        if (((row < 0) | (row > 2)) | ((column < 0) | (column > 2))) // confirming the space is within the board
+        if (!Char.IsDigit(space)) // if the space isn't within the board
         {
             Console.WriteLine("That space isn't on the board, choose a space within rows 0-2 and columns 0-2");
             continue; // skips the switch between players and the board update
         }
 
-        if (board[row, column] != ' ') // confirming the space is empty
+        int row = 0, column = 0; // defining vars in current scope to change them in switch statement
+        switch (space)
+        {
+            case '1':
+                break;
+            case '2':
+                column += 1;
+                break;
+            case '3':
+                column += 2;
+                break;
+            case '4':
+                row += 1;
+                break;
+            case '5':
+                row += 1; column += 1;
+                break;
+            case '6':
+                row += 1; column += 2;
+                break;
+            case '7':
+                row += 2;
+                break;
+            case '8':
+                row += 2; column += 1;
+                break;
+            case '9':
+                row += 2; column += 2;
+                break;
+        }
+
+        if (!Char.IsDigit(board[row, column])) // if the space is already filled
         {
             Console.WriteLine("That space is already filled, choose an empty space");
             continue; // skips the switch between players and the board update
@@ -92,9 +121,15 @@ static void PlayNC()
         
         board[row, column] = PLAYERS[currentPlayer]; // updating board with X or O in selected space (depending on the player)
 
-        // Switching currentPlayer between 0 and 1:
+        // Switching currentPlayer between 0 and 1 and updating turnNum:
         currentPlayer++;
         currentPlayer %= 2;
+        turnNum += 1;
+
+        if (turnNum > 9)
+        {
+            break;
+        }
     }
 
     NCPrint(board);
@@ -105,7 +140,6 @@ static void PlayNC()
     else if (winner == 'O') Console.WriteLine("Player 2 wins!");
     else Console.WriteLine("Draw!");
 }
-
 
 PlayNC();
 
