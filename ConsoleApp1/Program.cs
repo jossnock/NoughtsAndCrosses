@@ -1,16 +1,4 @@
-﻿using System.Diagnostics;
-/*
-To-do:
- - Generalise the functions to work with n-by-n size board
-     - Select board size
- - Improve checking system:
-     - Check top left corner for matches in adjacent cells (proceed if match, else break)
-     - Check opposite corner for matches in adjacent cells (proceed if match, else break)
-     - Check top right corner for anti-diagonal matches
-     - Check centre for row/column matches
-*/
-
-// defining methods:
+﻿// defining methods:
 
 static void NCPrint(string[,] inputBoard)
 /* 
@@ -19,8 +7,6 @@ Prints the current state of the board.
 {
     int boardSizeSquared = inputBoard.Length;
     int boardMaxDigits = Convert.ToString(boardSizeSquared).Length; // number of digits in the highest number on the board
-
-
 
     int BoardLength = inputBoard.GetLength(0); // BoardWidth = BoardHeight b/c board will always be a square
 
@@ -130,12 +116,12 @@ int currentSpaceNum = 1; // the number representing each space, it increments la
 int boardMaxDigits = Convert.ToString(boardSize * boardSize).Length; // number of digits in the highest number on the board
 
 // Adding in numbers and spaces
-for (int row = 0; row < boardSize; row ++)
+for (int row = 0; row < boardSize; row++)
 {
     for (int column = 0; column < boardSize; column++)
     {
         board[row, column] = Convert.ToString(currentSpaceNum)
-                             .PadLeft(boardMaxDigits, '0');// Adding leading 0s to make the board align with 2+ digit numbers
+                                .PadLeft(boardMaxDigits, '0');// Adding leading 0s to make the board align with 2+ digit numbers
         currentSpaceNum++;
     }
 }
@@ -154,14 +140,14 @@ while (CheckForWin(board) == ' ')
     NCPrint(board);
     Console.WriteLine($"- - - Player {currentPlayer + 1}'s turn - - -"); // since currentPlayer starts on 0, 1 must be added
 
-    Console.WriteLine($"Player {currentPlayer + 1}, choose a space ({"1".PadLeft(boardMaxDigits, '0')}-{boardSize*boardSize}): "); // leading 0s to account for leading 0s in space numbers
+    Console.WriteLine($"Player {currentPlayer + 1}, choose a space ({"1".PadLeft(boardMaxDigits, '0')}-{boardSize * boardSize}): "); // leading 0s to account for leading 0s in space numbers
     int space = Convert.ToInt32(Console.ReadLine());
 
     Console.WriteLine("- - - - - - - - - - - - - -"); // buffer between rounds
 
     if (space > boardSize * boardSize) // if the space is outside the bounds of the board
     {
-        Console.WriteLine($"That space isn't on the board, choose a space ({"1".PadLeft(boardMaxDigits, '0')}-{boardSize*boardSize})"); // leading 0s to account for leading 0s in space numbers
+        Console.WriteLine($"That space isn't on the board, choose a space ({"1".PadLeft(boardMaxDigits, '0')}-{boardSize * boardSize})"); // leading 0s to account for leading 0s in space numbers
         continue; // skips the switch between players and the board update
     }
 
@@ -174,7 +160,7 @@ while (CheckForWin(board) == ' ')
         Console.WriteLine("That space is already filled, choose an empty space");
         continue; // skips the switch between players and the board update
     }
-    
+
     board[row, column] = PlayerSymbols[currentPlayer]; // updating board with X or O in selected space (depending on the player)
 
     // Switching currentPlayer between 0 and 1 and updating turnNum:
@@ -192,6 +178,6 @@ NCPrint(board);
 
 char winner = CheckForWin(board);
 
-if (winner == 'X') Console.WriteLine("Player 1 wins!");
+if ((winner == 'X') | (board.Length == 1)) Console.WriteLine("Player 1 wins!"); // if board.Length == 1 and the board is full, player 1 must've won
 else if (winner == 'O') Console.WriteLine("Player 2 wins!");
-else Console.WriteLine("Draw!"); // [EDIT For board size = 1]
+else Console.WriteLine("Draw!");
